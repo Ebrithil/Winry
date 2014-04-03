@@ -157,7 +157,6 @@ var
         fileURL: string;
         srcTags: iHTMLElementCollection;
         srcTagE: iHTMLElement;
-        srcElem: iHTMLElement2;
         srcDoc3: iHTMLDocument3;
 
     begin
@@ -193,9 +192,22 @@ var
 begin
     dwlMngr := TdlManager.create;
 
-    // Params
-    dftMaxConRetr := 3;
-    dftFileDestin := '.';
+    // Params finding
+    if findCmdLineSwitch('r') then
+        for i := 1 to paramCount do
+            if paramStr(i)[length( paramStr(i) )] = 'r' then
+                dftMaxConRetr := strToInt( paramStr(i + 1) )
+            else
+    else
+        dftMaxConRetr := 3;
+
+    if findCmdLineSwitch('d') then
+        for i := 1 to paramCount do
+            if paramStr(i)[length( paramStr(i) )] = 'd' then
+                dftFileDestin := paramStr(i + 1)
+            else
+    else
+        dftFileDestin := '.';
 
     // Combofix info
     swInfo[0].swName   := 'Combofix';
@@ -228,6 +240,10 @@ begin
             dwlMngr.getLinkAndDownload;
         end;
 
+    writeln;
     writeln('Fine.');
-    readln;
+
+    // Autoclose if param passed by
+    if not findCmdLineSwitch('c') then
+        readln;
 end.
